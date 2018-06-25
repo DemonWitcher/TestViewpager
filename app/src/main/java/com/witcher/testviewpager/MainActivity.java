@@ -27,23 +27,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         viewPager = findViewById(R.id.vp);
-        viewArrayList.add(new PagerView(this, R.drawable.img11));
-        viewArrayList.add(new PagerView(this, R.drawable.img2));
-        viewArrayList.add(new PagerView(this, R.drawable.img3));
-        viewArrayList.add(new PagerView(this, R.drawable.img4));
-        viewArrayList.add(new PagerView(this, R.drawable.img5));
-        viewArrayList.add(new PagerView(this, R.drawable.img7));
-        viewArrayList.add(new PagerView(this, R.drawable.img8));
-        viewArrayList.add(new PagerView(this, R.drawable.img12));
+        viewArrayList.add(new PagerView2(this, R.drawable.img11));
+        viewArrayList.add(new PagerView2(this, R.drawable.img2));
+        viewArrayList.add(new PagerView2(this, R.drawable.img3));
+        viewArrayList.add(new PagerView2(this, R.drawable.img4));
+        viewArrayList.add(new PagerView2(this, R.drawable.img5));
+        viewArrayList.add(new PagerView2(this, R.drawable.img7));
+        viewArrayList.add(new PagerView2(this, R.drawable.img8));
+        viewArrayList.add(new PagerView2(this, R.drawable.img12));
 
         viewPager.setAdapter(new MyPagerAdapter());
 
-//        viewPager.setPageTransformer(true, new ViewPager.PageTransformer() {
-//            @Override
-//            public void transformPage(@NonNull View page, float position) {
-//                L.i("position:"+position);
-//            }
-//        },10);
         viewPager.setOffscreenPageLimit(2);
         viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
         viewPager.setPageMargin(50);
@@ -55,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void transformPage(View view, float position) {
             //左侧 -1 当前0 右侧 1
-            PagerView pagerView = (PagerView) view;
-
+            PagerView2 pagerView = (PagerView2) view;
+            //这里的偏移量是0.1716418  0.1716418这个值是正中间的
             float absPosition = Math.abs(position);
             float scale = 1 - (absPosition * (1 - MIN_SCALE));
             L.i(pagerView.flag() + "  position:" + position + "  scale:" + scale);
