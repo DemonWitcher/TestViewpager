@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 
-
 /*
 用clipPadding 然后给viewpager一个padding来实现的两边侧漏效果  缺点是transformPage里面
 当前的页面处于居中状态时 position不为0 会有偏移量
@@ -40,22 +39,42 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager.setOffscreenPageLimit(2);
         viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
-        viewPager.setPageMargin(50);
+//        viewPager.setPageMargin(50);
     }
 
     public static class ZoomOutPageTransformer implements ViewPager.PageTransformer {
         private static float MIN_SCALE = 0.85f;
+        private static float MIN_SCALE2 = 0.35f;
+        private ViewPager mViewPager;
 
         @Override
         public void transformPage(View view, float position) {
-            //左侧 -1 当前0 右侧 1
+//            //左侧 -1 当前0 右侧 1
             PagerView2 pagerView = (PagerView2) view;
-            //这里的偏移量是0.1716418  0.1716418这个值是正中间的
-            float absPosition = Math.abs(position);
+
+
+            if (mViewPager == null) {
+                mViewPager = (ViewPager) view.getParent();
+            }
+            //left是138 表示是中心view 大于138是右侧 小于138是左侧
+            int leftInScreen = view.getLeft() - mViewPager.getScrollX();//view离屏幕左侧的位置
+            int centerXInViewPager = leftInScreen + view.getMeasuredWidth() / 2;//view在屏幕上的中心点 1344
+            int offsetX = centerXInViewPager - mViewPager.getMeasuredWidth() / 2;//804 view的中心点和屏幕中心点的距离
+            float absPosition =  Math.abs(offsetX)/(float)view.getMeasuredWidth();
             float scale = 1 - (absPosition * (1 - MIN_SCALE));
-            L.i(pagerView.flag() + "  position:" + position + "  scale:" + scale);
-            pagerView.setScaleX(scale);
-            pagerView.setScaleY(scale);
+            L.i("flag:" + pagerView.flag() + "  scale:"+scale+"  offsetX:"+offsetX);
+            /*
+            当 offsetX 等于view宽度时候 是缩放最大值
+            当 offsetX 等于0的时候      是缩放最小值 不缩放
+            offsetX 区间 -view.width  -  0  -  view.width
+            取offsetX 的绝对值 除以view.width 计算缩放比
+            abs
+             */
+//            if (scaleFactor > 0) {
+                view.setScaleX(scale);
+                view.setScaleY(scale);
+//            page.setTranslationX(-mMaxTranslateOffsetX * offsetRate);
+//            }
         }
     }
 
